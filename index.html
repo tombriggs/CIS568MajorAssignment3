@@ -33,19 +33,6 @@
 <!-- https://seaborn.pydata.org/generated/seaborn.jointplot.html -->
 <!--palmer_penguin_species: https://raw.githubusercontent.com/datavizpyr/data/master/palmer_penguin_species.tsv -->
 
-<!--
-<table>
-    <tr>
-        <td><svg width="500px" height="150px"  id="top"></svg></td>
-        <td width="10%">&nbsp</td>
-    </tr>
-    <tr>
-        <td><svg width="500px" height="500px" viewBox="0 0 1000 1000" id="main"></svg></td>
-        <td><svg width="150px" height="500px" id="right"></svg></td>
-    </tr>
-</table>
--->
-
 <!-- A table to contain our jointplot tables -->
 <table id="maintable"><tr id="row1"></tr></table>
 
@@ -112,7 +99,7 @@
     }
 
 
-    function graphSpecies(data, speciesName){
+    function graphSpecies(data, speciesName, colorScale) {
         // fetch data from table
         let culmen_length_mm = d3.map(data,function (d){
             return +d.culmen_length_mm})
@@ -141,19 +128,57 @@
             'main' + speciesName
             ,title=speciesName,
             xLabel="culmen_length_mm",
-            yLabel="culmen_depth_mm");
+            yLabel="culmen_depth_mm",
+            colorScale);
         //#############
         bar_plot(culmen_length_mm, 10,'top'+speciesName)
         h_bar_plot(culmen_depth_mm,10,'right'+speciesName)
     }
 
+    function addLegend(species, colorScale) {
+        const endMargin = 10;
+        const topMargin = 5;
+        const legendWidthEach = 100
+        let legendWidth = (legendWidthEach * species.size) + (endMargin * 2);
+        const legendHeight = 20;
+        const boxWidth = 10;
+
+        let lbox = d3.select("body").append("svg")
+            .attr("width", legendWidth)
+            .attr("height", legendHeight)
+            .attr("style", "margin-top: 10px;")
+
+        let i = 0;
+        species.forEach(speciesName => {
+            let thisg = lbox.append("g")
+
+            thisg.append("rect")
+                .attr("width", boxWidth)
+                .attr("height", legendHeight - (topMargin * 2))
+                .attr("x", endMargin + (i * legendWidthEach))
+                .attr("fill", colorScale(i))
+
+            thisg.append("text")
+                .attr("x", endMargin + (i * legendWidthEach) + boxWidth + (endMargin / 2))
+                .attr("y", legendHeight - topMargin)
+                .text(speciesName)
+
+            i++
+        })
+    }
     function main(data) {
         let species = new Set(d3.map(data,function (d){return d.species}))
+
+        // Define the colorscale now so the scatterplot and legend are consistent
+        let colorScale= d3.scaleLinear().domain(d3.extent([0, 2])).range(['steelblue','brown'])
+
         species.forEach(speciesName => {
             addJointPlot(speciesName)
             let speciesdata = data.filter(d => d.species === speciesName)
-            graphSpecies(speciesdata, speciesName)
+            graphSpecies(speciesdata, speciesName, colorScale)
         })
+
+        addLegend(species, colorScale)
     }
 </script>
 

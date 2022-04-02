@@ -4,6 +4,7 @@ function scatter_plot(X,Y,radiuses,
                       title="",
                       xLabel="",
                       yLabel="",
+                      colorScale,
                       margin = 100)
 {
     function data_axis_pad(data,pad=.05){
@@ -12,7 +13,7 @@ function scatter_plot(X,Y,radiuses,
 
     let xScale= d3.scaleLinear().domain(data_axis_pad(d3.extent(X))).range([0+margin,1000-margin])
     let yScale= d3.scaleLinear().domain(data_axis_pad(d3.extent(Y))).range([1000-margin,0 + margin])
-    let colorScale= d3.scaleLinear().domain(d3.extent(ColorData)).range(['steelblue','brown'])
+    //let colorScale= d3.scaleLinear().domain(d3.extent(ColorData)).range(['steelblue','red','brown'])
     let radiusScale = d3.scaleLinear().domain(d3.extent(radiuses)).range([1,20])
     let axis = d3.select(`#${axis_key}`)
 
