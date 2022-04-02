@@ -16,8 +16,8 @@ function bar_plot(Values, //column values to make histogram of
     // we will use this for making bins and placing them
     let xScale= d3.scaleLinear()
         .domain(d3.extent(Values))
-        .range([margin,width]);
-
+        .range([margin,width])
+        .nice()
 
     // histogram function makes bins and the values for each bin
     // use xScale and number bins to calculate the bisn location and value
@@ -35,8 +35,6 @@ function bar_plot(Values, //column values to make histogram of
         .domain([0,d3.max(bins,function(d) { return d.length; })])
         .range([height,0]);
 
-    //console.log(bins)
-
     // pass the bins and plot them
     axis.selectAll('.bars')
         .data(bins)  // array of arrays (each array inside it is the values inside one bin)
@@ -50,7 +48,6 @@ function bar_plot(Values, //column values to make histogram of
         .append('rect')
         .attr("width",
             function(d) {
-                //return (width-(margin*2))/bins_count;
                 return (width-(margin*2))/bins.length;
             })
         .attr("height", function(d) { return height - yScale(d.length); })
@@ -79,6 +76,7 @@ function h_bar_plot(Values, //column values to make histogram of
     let yScale= d3.scaleLinear()
         .domain(d3.extent(Values))
         .range([height,margin])
+        .nice()
 
     // step 2 get the histogram data
     let histogram = d3.histogram()
@@ -109,7 +107,6 @@ function h_bar_plot(Values, //column values to make histogram of
                 return xScale(d.length);
             })
         .attr("height", function() {
-            //return (height)/bins_count*.50; }) // static bar thickness!
             return (height)/bins.length*.50; }) // static bar thickness!
         .style("fill", "#509ec8")
 
