@@ -48,7 +48,7 @@
             .append("td")
             .attr("style", "padding: 5px;")
 
-        const mainSize = 200;
+        const mainSize = 250;
         const sideSize = 40;
 
         let mainTable = pageBody.append("table")
@@ -168,6 +168,7 @@
     }
     function main(data) {
         let species = new Set(d3.map(data,function (d){return d.species}))
+        let islands = new Set(d3.map(data,function (d){return d.island}))
 
         // Define the colorscale now so the scatterplot and legend are consistent
         let colorScale= d3.scaleLinear().domain(d3.extent([0, 2])).range(['steelblue','brown'])
@@ -178,7 +179,7 @@
             graphSpecies(speciesdata, speciesName, colorScale)
         })
 
-        addLegend(species, colorScale)
+        addLegend(islands, colorScale)
     }
 </script>
 
